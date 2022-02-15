@@ -19,7 +19,7 @@ class ChattingController extends GetxController {
     final f = FirebaseFirestore.instance;
     return f
         .collection(chatting_room)
-        .limit(1)
+        // .limit(1)
         .orderBy('upTime', descending: true)
         .snapshots();
   }
@@ -34,15 +34,28 @@ class ChattingController extends GetxController {
     }
     var now = DateTime.now().millisecondsSinceEpoch;
     final f = FirebaseFirestore.instance;
+    bool state = true;
+
+    if (chatrtingList.isNotEmpty) {
+      state = (chatrtingList.first.pk != pk);
+    }
+    //   var x = await f
+    //     .collection(chatting_room)
+    //     .limit(1)
+    //     .orderBy('upTime', descending: true)
+    //     .get();
+    // var ss = x.docs[0].data() as Map<String, dynamic>;
     await f
         .collection(chatting_room)
         .doc(now.toString())
-        .set(ChattingModel(pk, name, text, now).toJson());
+        .set(ChattingModel(pk, name, text, now, state).toJson());
   }
 
   void load() async {
+    print('최초 한번 실행해야 하는데;;');
     var now = DateTime.now().millisecondsSinceEpoch;
     final f = FirebaseFirestore.instance;
+
     var result = await f
         .collection(chatting_room)
         // .where('upTime', isGreaterThan: now)
@@ -57,13 +70,17 @@ class ChattingController extends GetxController {
     // TODO: implement onInit
     load();
     getSnapshot().listen((event) {
-      print('한번실행해야하는데');
       if (first) {
         first = false;
         return;
       }
-      addOne(
-          ChattingModel.fromJson(event.docs[0].data() as Map<String, dynamic>));
+      event.docChanges.forEach((e) {
+        addOne(ChattingModel.fromJson(e.doc.data() as Map<String, dynamic>));
+      });
+      // print(event.docs);
+      // print(event.docs[0].data() as Map<String, dynamic>);
+      // addOne(
+      //     ChattingModel.fromJson(event.docs[0].data() as Map<String, dynamic>));
     });
     super.onInit();
   }

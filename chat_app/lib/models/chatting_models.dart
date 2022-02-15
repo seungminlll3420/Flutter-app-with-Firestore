@@ -1,14 +1,13 @@
-import 'dart:convert';
-
 class ChattingModel {
-  ChattingModel(this.pk, this.name, this.text, this.upTime);
+  ChattingModel(this.pk, this.name, this.text, this.upTime, this.state);
   final String pk;
   final String name;
   final String text;
   final int upTime;
+  final bool state;
   factory ChattingModel.fromJson(Map<String, dynamic> json) {
     return ChattingModel(
-        json['pk'], json['name'], json['text'], json['upTime']);
+        json['pk'], json['name'], json['text'], json['upTime'], json['state']);
   }
 
   Map<String, dynamic> toJson() {
@@ -17,6 +16,7 @@ class ChattingModel {
       'name': name,
       'text': text,
       'upTime': upTime,
+      'state': state,
     };
   }
 

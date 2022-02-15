@@ -1,0 +1,1 @@
+enum ChatStatu { NEW, CONT }

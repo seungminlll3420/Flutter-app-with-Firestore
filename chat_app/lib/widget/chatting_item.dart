@@ -11,7 +11,7 @@ class ChattingItem extends StatelessWidget {
     ChattingController chatting_controller = Get.find<ChattingController>();
     bool isMe = chatting_controller.pk == chattingModel.pk;
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         mainAxisAlignment:
             isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -20,29 +20,33 @@ class ChattingItem extends StatelessWidget {
             crossAxisAlignment:
                 isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 13),
-                child: Text(chattingModel.name),
-              ),
+              chattingModel.state
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 13),
+                      child: Text(chattingModel.name),
+                    )
+                  : Container(),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 5),
-                padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                margin: const EdgeInsets.symmetric(horizontal: 5),
+                padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height * 0.4),
                 decoration: BoxDecoration(
                   color: isMe ? Color(0xFF111111) : Color(0xFF555555),
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(isMe ? 30 : 0),
-                    bottomRight: Radius.circular(isMe ? 0 : 30),
+                    bottomLeft: const Radius.circular(30),
+                    bottomRight: const Radius.circular(30),
+                    topLeft: Radius.circular(
+                        chattingModel.state ? (isMe ? 30 : 0) : 30),
+                    topRight: Radius.circular(
+                        chattingModel.state ? (isMe ? 0 : 30) : 30),
                   ),
                 ),
                 child: Text(
                   chattingModel.text,
                   maxLines: null,
                   overflow: TextOverflow.visible,
-                  style: TextStyle(color: Color(0xffffffff)),
+                  style: const TextStyle(color: Color(0xffffffff)),
                 ),
               )
             ],
