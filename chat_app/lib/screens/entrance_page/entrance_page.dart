@@ -16,7 +16,9 @@ class EntrancePage extends GetView<EntranceController> {
             Padding(
               padding: const EdgeInsets.all(12),
               child: TextField(
-                controller: controller.chattringEditingController.value,
+                onChanged: (text) {
+                  controller.chatingRoomName.value = text;
+                },
                 style: const TextStyle(fontSize: 25),
                 textAlign: TextAlign.center,
                 decoration: const InputDecoration(
@@ -31,7 +33,9 @@ class EntrancePage extends GetView<EntranceController> {
             Padding(
               padding: const EdgeInsets.all(12),
               child: TextField(
-                controller: controller.textEditingController.value,
+                onChanged: (text) {
+                  controller.nickname.value = text;
+                },
                 style: const TextStyle(fontSize: 25),
                 textAlign: TextAlign.center,
                 decoration: const InputDecoration(
@@ -46,8 +50,7 @@ class EntrancePage extends GetView<EntranceController> {
             GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () async {
-                await Get.toNamed(
-                    '/chat/${controller.textEditingController.value.text}?chatting_room=${controller.chattringEditingController.value.text}');
+                await Get.toNamed('/chat/${controller.uuid.value}');
               },
               child: Container(
                 padding: const EdgeInsets.all(13),

@@ -3,15 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/state_manager.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ChattingController extends GetxController {
   ChattingController(this.pk, this.name, this.chatting_room);
 
   final String pk;
   final String name;
+  final String chatting_room;
 
   bool first = true;
-  final String chatting_room;
 
   RxList<ChattingModel> chatrtingList = <ChattingModel>[].obs;
 
@@ -35,10 +36,22 @@ class ChattingController extends GetxController {
     var now = DateTime.now().millisecondsSinceEpoch;
     final f = FirebaseFirestore.instance;
     bool state = true;
+    bool timeState = false;
+    bool timeStamp = true;
 
     if (chatrtingList.isNotEmpty) {
       state = (chatrtingList.first.pk != pk);
+      timeState = (DateFormat('HH:mm').format(
+              DateTime.fromMillisecondsSinceEpoch(
+                  chatrtingList.first.upTime)) ==
+          DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(now)));
+      if (state == true || timeState == false) {
+        timeStamp = true;
+      } else {
+        timeStamp = false;
+      }
     }
+    print(timeStamp);
     //   var x = await f
     //     .collection(chatting_room)
     //     .limit(1)
@@ -48,7 +61,7 @@ class ChattingController extends GetxController {
     await f
         .collection(chatting_room)
         .doc(now.toString())
-        .set(ChattingModel(pk, name, text, now, state).toJson());
+        .set(ChattingModel(pk, name, text, now, state, timeStamp).toJson());
   }
 
   void load() async {

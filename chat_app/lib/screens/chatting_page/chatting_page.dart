@@ -1,22 +1,19 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:chat_app/models/chatting_models.dart';
 import 'package:chat_app/screens/chatting_page/chatting_controller.dart';
 import 'package:chat_app/widget/chatting_item.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class ChattingPage extends GetView<ChattingController> {
   ChattingPage({Key? key}) : super(key: key);
   var data = Get.parameters;
-
   @override
   Widget build(BuildContext context) {
     TextEditingController textEditingController = TextEditingController();
+    bool afterTimeStamp = true;
+    var afterTime;
+    var afterPk;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
@@ -36,9 +33,25 @@ class ChattingPage extends GetView<ChattingController> {
               () {
                 return ListView(
                   reverse: true,
-                  children: controller.chatrtingList.value
-                      .map((element) => ChattingItem(chattingModel: element))
-                      .toList(),
+                  children: controller.chatrtingList.value.map((element) {
+                    if (afterTime != null && afterPk != null) {
+                      if (afterTime !=
+                              DateFormat('hh:mm').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      element.upTime)) ||
+                          afterPk != element.pk) {
+                        afterTimeStamp = true;
+                      } else {
+                        afterTimeStamp = false;
+                      }
+                    }
+                    afterTime = DateFormat('hh:mm').format(
+                        DateTime.fromMillisecondsSinceEpoch(element.upTime));
+                    afterPk = element.pk;
+
+                    return ChattingItem(
+                        chattingModel: element, timeStamp: afterTimeStamp);
+                  }).toList(),
                 );
               },
             ),

@@ -40,10 +40,13 @@ class MyApp extends StatelessWidget {
           name: "/chat/:name",
           page: () => ChattingPage(),
           binding: BindingsBuilder(() {
-            String uuid = Get.find<EntranceController>().uuid.value;
-            String? name = Get.parameters['name'];
-            String? chatting_room = Get.parameters['chatting_room'];
-            Get.put(ChattingController(uuid, name!, chatting_room!));
+            var entranceController = Get.find<EntranceController>();
+
+            Get.put(ChattingController(
+              entranceController.uuid.value,
+              entranceController.nickname.value,
+              entranceController.chatingRoomName.value,
+            ));
           }),
         ),
       ],
