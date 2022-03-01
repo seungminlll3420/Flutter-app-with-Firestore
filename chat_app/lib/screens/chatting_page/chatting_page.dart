@@ -14,7 +14,7 @@ class ChattingPage extends GetView<ChattingController> {
     bool afterTimeStamp = true;
     var afterTime;
     var afterPk;
-
+    var first = true;
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
@@ -31,10 +31,14 @@ class ChattingPage extends GetView<ChattingController> {
           Expanded(
             child: Obx(
               () {
+                first = true;
+                afterTime = null;
+                afterPk = null;
                 return ListView(
                   reverse: true,
                   children: controller.chatrtingList.value.map((element) {
                     if (afterTime != null && afterPk != null) {
+                      first = false;
                       if (afterTime !=
                               DateFormat('hh:mm').format(
                                   DateTime.fromMillisecondsSinceEpoch(
@@ -45,6 +49,11 @@ class ChattingPage extends GetView<ChattingController> {
                         afterTimeStamp = false;
                       }
                     }
+                    if (first == true) {
+                      afterTimeStamp = true;
+                    }
+                    print(first);
+                    print(element.text);
                     afterTime = DateFormat('hh:mm').format(
                         DateTime.fromMillisecondsSinceEpoch(element.upTime));
                     afterPk = element.pk;
